@@ -1,0 +1,24 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Event {
+  id          Int      @id @default(autoincrement())
+  event_title String   @unique
+  date        DateTime
+  description String
+  Media       Media?
+}
+
+model Media {
+  event_id       Int    @id @default(autoincrement())
+  audio_url      String
+  video_url      String
+  transcript_url String
+  Event          Event  @relation(fields: [event_id], references: [id])
+}

@@ -1,0 +1,79 @@
+"use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+const eventService = require("../services/event.service");
+const mediaService = require("../services/media.service");
+function getAll() {
+    return __awaiter(this, void 0, void 0, function* () {
+        return eventService.getAllEvents();
+    });
+}
+function getById(id) {
+    return __awaiter(this, void 0, void 0, function* () {
+        let event = yield eventService.getEventById(id);
+        let media = yield mediaService.getMediaUrls(id);
+        if (event == null) {
+            return JSON.parse(`[{"error": 404}]`);
+        }
+        event.media = media;
+        return event;
+    });
+}
+function createNewPost(body) {
+    return __awaiter(this, void 0, void 0, function* () {
+        if ("event_title" in body && "date" in body && "description" in body) {
+            yield eventService.createNewEvent(body);
+            return "Event Created";
+        }
+        else {
+            return "Bad request";
+        }
+    });
+}
+function updateById(id, body) {
+    return __awaiter(this, void 0, void 0, function* () {
+        let updateObj = {
+            id: parseInt(id),
+            title: body.event_title ? body.event_title : undefined,
+            description: body.description ? body.description : undefined,
+            date: body.date ? body.date : undefined,
+        };
+        eventService.updateEvent(updateObj);
+        console.log(body);
+        return "Success";
+    });
+}
+function deleteById(id) {
+    return __awaiter(this, void 0, void 0, function* () {
+        let deleteEvent = yield eventService.deleteEvent(id);
+        console.log(`Delete: ${id}`);
+        console.log(deleteEvent);
+        return `Delete: ${id}`;
+    });
+}
+function getAudioById(id) {
+    return __awaiter(this, void 0, void 0, function* () {
+        let audio = yield mediaService.getAudioById(id);
+        if (audio == null) {
+            return JSON.parse(`[{"error": 404}]`);
+        }
+        return audio;
+    });
+}
+function getVideoById(id) {
+    return __awaiter(this, void 0, void 0, function* () {
+        let video = yield mediaService.getVideoById(id);
+        if (video == null) {
+            return JSON.parse(`[{"error" 404}]`);
+        }
+        return video;
+    });
+}
+module.exports = { getAll, getById, getAudioById, updateById, getVideoById, createNewPost, deleteById };
