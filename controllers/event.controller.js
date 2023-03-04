@@ -8,8 +8,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+Object.defineProperty(exports, "__esModule", { value: true });
 const eventService = require("../services/event.service");
-const mediaService = require("../services/media.service");
 function getAll() {
     return __awaiter(this, void 0, void 0, function* () {
         return eventService.getAllEvents();
@@ -18,11 +18,10 @@ function getAll() {
 function getById(id) {
     return __awaiter(this, void 0, void 0, function* () {
         let event = yield eventService.getEventById(id);
-        let media = yield mediaService.getMediaUrls(id);
         if (event == null) {
-            return JSON.parse(`[{"error": 404}]`);
+            let errorObj = { code: 404 };
+            return errorObj;
         }
-        event.media = media;
         return event;
     });
 }
@@ -58,22 +57,4 @@ function deleteById(id) {
         return `Delete: ${id}`;
     });
 }
-function getAudioById(id) {
-    return __awaiter(this, void 0, void 0, function* () {
-        let audio = yield mediaService.getAudioById(id);
-        if (audio == null) {
-            return JSON.parse(`[{"error": 404}]`);
-        }
-        return audio;
-    });
-}
-function getVideoById(id) {
-    return __awaiter(this, void 0, void 0, function* () {
-        let video = yield mediaService.getVideoById(id);
-        if (video == null) {
-            return JSON.parse(`[{"error" 404}]`);
-        }
-        return video;
-    });
-}
-module.exports = { getAll, getById, getAudioById, updateById, getVideoById, createNewPost, deleteById };
+module.exports = { getAll, getById, updateById, createNewPost, deleteById };

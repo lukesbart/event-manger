@@ -18,6 +18,11 @@ function getAllEvents() {
                     date: 'desc',
                 },
             ],
+            select: {
+                id: true,
+                event_title: true,
+                date: true,
+            }
         });
         return events;
     });

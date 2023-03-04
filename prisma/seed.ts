@@ -8,20 +8,12 @@ async function main() {
         },
         update: {},
         create: {
-            event_title: 'It begins!',
+            event_title: "It begins!",
             date: new Date("2023-01-01T08:30:00").toISOString(),
             description: "First Event",
-        },
-    });
-    const media1 = await prisma.media.upsert({
-        where: {
-            event_id: 1,
-        },
-        update: {},
-        create: {
-            audio_url: 'audio1-1.mp3',
-            video_url: 'video1-1.mp4',
-            transcript_url: 'transcript1-1.pdf',
+            audio_url: "audio1-1.mp3",
+            video_url: "video1-1.mp4",
+            handout_url: "handout1-1.pdf",
         },
     });
 
@@ -32,18 +24,10 @@ async function main() {
             event_title: 'And there were two',
             date: new Date("2023-01-02T08:30:00").toISOString(),
             description: "Second Event",
+            audio_url: "audio1-2.mp3",
+            video_url: "video1-2.mp4",
+            handout_url: "transcript1-2.pdf"
         },
-    });
-    const media2 = await prisma.media.upsert({
-        where: {
-            event_id: 2,
-        },
-        update: {},
-        create: {
-            audio_url: 'audio1-2.mp3',
-            video_url: 'video1-2.mp4',
-            transcript_url: 'transcript1-2.pdf',
-        }
     });
 
     const event3 = await prisma.event.upsert({
@@ -53,19 +37,11 @@ async function main() {
             event_title: 'Third Event',
             date: new Date("2023-01-03T08:30:00").toISOString(),
             description: "Another one",
+            audio_url: "audio1-3.mp3",
+            video_url: "video1-3.mp4",
+            handout_url: "handout-3.pdf",
         },
     });
-    const media3 = await prisma.media.upsert({
-        where: {
-            event_id: 3,
-        },
-        update: {},
-        create: {
-            audio_url: 'audio1-3.mp3',
-            video_url: 'video1-3.mp4',
-            transcript_url: 'transcript1-3.pdf',
-        },
-    })
 }
 
 main()

@@ -21,7 +21,6 @@ router.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     res.send(yield eventController.getAll());
 }));
 router.post('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log(req.body);
     res.json(yield eventController.createNewPost(req.body));
 }));
 // Event specific endpoints
@@ -33,12 +32,5 @@ router.put('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () 
 }));
 router.delete('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     res.json(yield eventController.deleteById(req.params.id));
-}));
-// Temporary Endpoints
-router.get('/:id/audio', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    res.json(yield eventController.getAudioById(req.params.id));
-}));
-router.get('/:id/video', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    res.json(yield eventController.getVideoById(req.params.id));
 }));
 module.exports = router;
