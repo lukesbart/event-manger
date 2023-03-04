@@ -9,9 +9,22 @@ const port = process.env.PORT;
 
 
 // Middleware
+const multer = require('multer');
+const storage = multer.diskStorage({
+  destination: function (req: Request, file: any, cb: any) {
+    cb(null, './assets')
+  },
+  filename: function (req: Request, file: any, cb: any) {
+    const uniqueSuffix = uuidv4()
+    cb(null, file.fieldname + '-' + uniqueSuffix + '.pdf')
+  }
+})
+const upload = multer({ dest: 'assets/', storage: storage });
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }))
 app.use("/assets", express.static('assets'));
+app.use("/public", express.static('public'));
 
 
 const event = require("./routes/event.route");
@@ -27,6 +40,10 @@ app.get('/uuid', (req: Request, res: Response) => {
 
 app.get('/uuid/:prefix/:ftype', (req: Request, res: Response) => {
   res.send(`${req.params.prefix}-${uuidv4()}.${req.params.ftype}`)
+});
+
+app.post('/pdf', upload.single('pdffile'), (req: Request, res: Response, next: any) => {
+  res.send("File uploaded.");
 });
 
 app.listen(port, () => {

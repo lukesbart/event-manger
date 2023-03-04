@@ -22,7 +22,7 @@ router.post('/', async (req: Request, res: Response) => {
 // Event specific endpoints
 
 router.get('/:id', async (req: Request, res: Response) => {
-    res.json(await eventController.updateById(req.params.id));
+    res.json(await eventController.getById(req.params.id));
 });
 
 router.put('/:id', async (req: Request, res: Response) => {

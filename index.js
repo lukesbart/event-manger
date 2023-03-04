@@ -10,9 +10,21 @@ dotenv_1.default.config();
 const app = (0, express_1.default)();
 const port = process.env.PORT;
 // Middleware
+const multer = require('multer');
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, './assets');
+    },
+    filename: function (req, file, cb) {
+        const uniqueSuffix = uuidv4();
+        cb(null, file.fieldname + '-' + uniqueSuffix + '.pdf');
+    }
+});
+const upload = multer({ dest: 'assets/', storage: storage });
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
 app.use("/assets", express_1.default.static('assets'));
+app.use("/public", express_1.default.static('public'));
 const event = require("./routes/event.route");
 app.use("/event", event);
 app.get('/', (req, res) => {
@@ -23,6 +35,9 @@ app.get('/uuid', (req, res) => {
 });
 app.get('/uuid/:prefix/:ftype', (req, res) => {
     res.send(`${req.params.prefix}-${uuidv4()}.${req.params.ftype}`);
+});
+app.post('/pdf', upload.single('pdffile'), (req, res, next) => {
+    res.send("File uploaded.");
 });
 app.listen(port, () => {
     console.log(`event-manager is running at http://localhost:${port}`);
