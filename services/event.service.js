@@ -38,13 +38,17 @@ function getEventById(id) {
         return event;
     });
 }
-function createNewEvent(body) {
+// Create DTO for new event
+function createNewEvent(createObj) {
     return __awaiter(this, void 0, void 0, function* () {
         let newEvent = yield db.event.create({
             data: {
-                event_title: body.event_title,
-                date: new Date(body.date).toISOString(),
-                description: body.description
+                event_title: createObj.title,
+                date: new Date(createObj.date).toISOString(),
+                description: createObj.description,
+                audio_url: createObj.audio_url,
+                video_url: createObj.video_url,
+                handout_url: createObj.handout_url,
             }
         });
         return newEvent;
@@ -70,6 +74,9 @@ function updateEvent(updateObj) {
                 event_title: updateObj.title,
                 date: updateObj.date ? new Date(updateObj.date).toISOString() : undefined,
                 description: updateObj.description,
+                audio_url: updateObj.audio_url,
+                video_url: updateObj.video_url,
+                handout_url: updateObj.handout_url
             }
         });
     });

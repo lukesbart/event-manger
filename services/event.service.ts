@@ -30,12 +30,16 @@ async function getEventById(id: string) {
     return event;
 }
 
-async function createNewEvent(body: any) {
+// Create DTO for new event
+async function createNewEvent(createObj: any) {
     let newEvent = await db.event.create({
         data: {
-            event_title: body.event_title,
-            date: new Date(body.date).toISOString(),
-            description: body.description
+            event_title: createObj.title,
+            date: new Date(createObj.date).toISOString(),
+            description: createObj.description,
+            audio_url: createObj.audio_url,
+            video_url: createObj.video_url,
+            handout_url: createObj.handout_url,
         }
     })
     return newEvent;
@@ -62,6 +66,9 @@ async function updateEvent(updateObj: any) {
             event_title: updateObj.title,
             date: updateObj.date ? new Date(updateObj.date).toISOString(): undefined,
             description: updateObj.description,
+            audio_url: updateObj.audio_url,
+            video_url: updateObj.video_url,
+            handout_url: updateObj.handout_url
         }
     });
 }
