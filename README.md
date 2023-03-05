@@ -17,7 +17,7 @@ Route tree:\
         * mp4: video/mp4
         * handout: application/pdf
 
-/event/:id\
+/event/:id
 * GET: get post with id
 * PUT: update post with id
     * fields (enctype="multipart/form-data"):
