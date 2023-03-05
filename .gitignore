@@ -4,5 +4,6 @@
 node_modules
 node_modules
 .DS_Store
-coolvideo.mp4
+assets/coolvideo.mp4
+assets/coolaudio.mp3
 db/dev.db
