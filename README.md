@@ -1,7 +1,7 @@
 # Event Manager
 
-An event manager webapp with Express and Prisma
-All POST fields are required
+An event manager webapp with Express and Prisma\
+All POST fields are required\
 All PUT fields are optional
 
 Route tree:\
