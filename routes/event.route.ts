@@ -3,6 +3,9 @@ import { Request, Response } from "express";
 const express = require("express");
 const router = express.Router();
 const eventController = require("../controllers/event.controller");
+const fileUpload = require("../middlewares/fileupload.middleware");
+import { UploadDTO } from "../interfaces/uploadDTO"
+import { UpdateDTO } from "../interfaces/updateDTO"
 
 router.use((req: Request, res: Response, next: any) => {
     console.log(`Request for: ${req.url}`);
@@ -10,13 +13,51 @@ router.use((req: Request, res: Response, next: any) => {
 });
 
 // General endpoints
-
 router.get('/', async (req: Request, res: Response) => {
     res.send(await eventController.getAll());
 });
 
-router.post('/', async (req: Request, res: Response) => {
-    res.json(await eventController.createNewPost(req.body));
+
+function newPostFilter(req: Request, file: any, cb: any) {
+    if (!("title" in req.body && "description" in req.body && "date" in req.body)) {
+        return cb(new Error("Required fields not filled (title, body, date)"));
+    } else {
+        // Figure out how to automatically include else branch
+        if (file.mimetype == "application/pdf" || file.mimetype == "video/mp4" || file.mimetype == "audio/mpeg") {
+            cb(null, true);
+        } else {
+            cb(null, false);
+            return cb(new Error('only .pdf, .mp4, .mp3 format allowed'));
+        }
+    }
+}
+const newPostUpload = fileUpload.createUpload(newPostFilter);
+
+const assetsUpload = newPostUpload.fields([{name: 'mp4', maxCount: 1}, {name: 'mp3', maxCount: 1}, {name: 'pdf', maxCount: 1}]);
+router.post('/', assetsUpload, async (req: Request, res: Response, next: any) => {
+    if (!req.files) {
+        res.status(400);
+        res.send("No files uploaded")
+    }
+
+    let filesJSON = JSON.stringify(req.files);
+    let filesOBJ = JSON.parse(filesJSON);
+
+    let mp3Route = filesOBJ["mp3"][0]["filename"];
+    let mp4Route = filesOBJ["mp4"][0]["filename"];
+    let pdfRoute = filesOBJ["pdf"][0]["filename"];
+
+
+    let uploadOBJ: UploadDTO = {
+        title: req.body.title,
+        description: req.body.description,
+        date: req.body.date,
+        audio_url: mp3Route,
+        video_url: mp4Route,
+        handout_url: pdfRoute
+    }
+
+    res.json(await eventController.createNewPost(uploadOBJ));
 });
 
 // Event specific endpoints
@@ -25,8 +66,30 @@ router.get('/:id', async (req: Request, res: Response) => {
     res.json(await eventController.getById(req.params.id));
 });
 
-router.put('/:id', async (req: Request, res: Response) => {
-    res.json(await eventController.updateById(req.params.id, req.body));
+const updateUpload = fileUpload.upload.fields([{name: 'mp4', maxCount:1}, {name: 'mp3', maxCount: 1}, {name: 'pdf', maxCount: 1}]);
+router.put('/:id', updateUpload, async (req: Request, res: Response) => {
+    
+    let mp3Route, mp4Route, pdfRoute;
+    if (req.files) {
+        let filesJSON = JSON.stringify(req.files);
+        let filesOBJ = JSON.parse(filesJSON);
+        
+        mp3Route = filesOBJ["mp3"] ? filesOBJ["mp3"][0]["filename"] : undefined;
+        mp4Route = filesOBJ["mp4"] ? filesOBJ["mp4"][0]["filename"] : undefined;
+        pdfRoute = filesOBJ["pdf"] ? filesOBJ["pdf"][0]["filename"] : undefined;
+    }
+
+    let updateOBJ : UpdateDTO = {
+        id: parseInt(req.params.id),
+        title: req.body.title ? req.body.title : undefined,
+        description: req.body.description ? req.body.description : undefined,
+        date: req.body.date ? req.body.date : undefined,
+        audio_url: req.files ? mp3Route : undefined,
+        video_url: req.files ? mp4Route : undefined,
+        handout_url: req.files ? pdfRoute : undefined,
+    }
+
+    res.json(await eventController.updateById(updateOBJ));
 })
 
 router.delete('/:id', async (req: Request, res: Response) => {

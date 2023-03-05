@@ -1,5 +1,7 @@
 const eventService = require("../services/event.service");
 import { error } from "../interfaces/error"
+import { CreateDTO } from "../interfaces/createDTO"
+import { UpdateDTO } from "../interfaces/updateDTO"
 
 async function getAll() {
     return eventService.getAllEvents();
@@ -16,34 +18,13 @@ async function getById(id: string) {
     return event;
 }
 
-async function createNewPost(body: any) {
-    if ("event_title" in body && "date" in body && "description" in body) {
-        await eventService.createNewEvent(body);
-        return "Event Created";
-    } else {
-        return "Bad request";
-    }
+async function createNewPost(createObj: CreateDTO) {
+    await eventService.createNewEvent(createObj);
+    return "Event created";
 }
 
-async function updateById(id: string, body: any) {
-    interface UpdateDTO {
-        id: number,
-        title: string;
-        description: string;
-        date: string;
-    }
-
-    let updateObj: UpdateDTO = {
-        id: parseInt(id),
-        title: body.event_title ? body.event_title : undefined,
-        description: body.description ? body.description : undefined,
-        date: body.date ? body.date : undefined,
-    };
-
-    eventService.updateEvent(updateObj);
-
-    console.log(body);
-
+async function updateById(updateOBJ: UpdateDTO) {
+    eventService.updateEvent(updateOBJ);
     return "Success";
 }
 

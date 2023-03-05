@@ -25,27 +25,15 @@ function getById(id) {
         return event;
     });
 }
-function createNewPost(body) {
+function createNewPost(createObj) {
     return __awaiter(this, void 0, void 0, function* () {
-        if ("event_title" in body && "date" in body && "description" in body) {
-            yield eventService.createNewEvent(body);
-            return "Event Created";
-        }
-        else {
-            return "Bad request";
-        }
+        yield eventService.createNewEvent(createObj);
+        return "Event created";
     });
 }
-function updateById(id, body) {
+function updateById(updateOBJ) {
     return __awaiter(this, void 0, void 0, function* () {
-        let updateObj = {
-            id: parseInt(id),
-            title: body.event_title ? body.event_title : undefined,
-            description: body.description ? body.description : undefined,
-            date: body.date ? body.date : undefined,
-        };
-        eventService.updateEvent(updateObj);
-        console.log(body);
+        eventService.updateEvent(updateOBJ);
         return "Success";
     });
 }
