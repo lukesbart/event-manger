@@ -4,8 +4,7 @@ An event manager webapp with Express and Prisma\
 All POST fields are required\
 All PUT fields are optional
 
-Route tree:\
-\
+## Route tree:
 /event
 * GET: get all events
 * POST: create new event
@@ -28,4 +27,10 @@ Route tree:\
         * mp4?: video/mp4
         * handout?: application/pdf
 
-DELETE: delete post with id
+* DELETE: delete post with id
+
+## Stack
+**Typescript** for the language\
+**Express.js** for the server\
+**Prisma** for the ORM based off of **SQLite** Database\
+**Multer** for multipart/form-data (file upload) submissions\
