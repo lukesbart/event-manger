@@ -13,7 +13,7 @@ function fileFilter(req, file, cb) {
 }
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, './tempassets');
+        cb(null, './assets');
     },
     filename: function (req, file, cb) {
         cb(null, uuidv4() + file.originalname);
@@ -27,4 +27,14 @@ const upload = multer({
         files: 3
     }
 });
-module.exports = { upload };
+function createUpload(customFileFilter) {
+    return multer({
+        storage: storage,
+        fileFilter: customFileFilter,
+        limits: {
+            filesSize: 524288000,
+            files: 3
+        }
+    });
+}
+module.exports = { upload, createUpload };
