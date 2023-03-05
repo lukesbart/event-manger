@@ -10,6 +10,7 @@ dotenv_1.default.config();
 const app = (0, express_1.default)();
 const port = process.env.PORT;
 // Middleware
+const morgan = require('morgan');
 const multer = require('multer');
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -22,6 +23,7 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ dest: 'assets/', storage: storage });
 const cors = require('cors');
+app.use(morgan("tiny"));
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
 app.use(cors());
