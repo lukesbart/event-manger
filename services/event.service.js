@@ -81,4 +81,17 @@ function updateEvent(updateObj) {
         });
     });
 }
-module.exports = { getAllEvents, getEventById, createNewEvent, deleteEvent, updateEvent };
+function checkIfTitleExists(title) {
+    return __awaiter(this, void 0, void 0, function* () {
+        let eventExists = yield db.event.findUnique({
+            where: {
+                event_title: title,
+            },
+        });
+        if (eventExists) {
+            return true;
+        }
+        return false;
+    });
+}
+module.exports = { getAllEvents, getEventById, createNewEvent, deleteEvent, updateEvent, checkIfTitleExists };

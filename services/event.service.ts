@@ -73,4 +73,18 @@ async function updateEvent(updateObj: any) {
     });
 }
 
-module.exports = {getAllEvents, getEventById, createNewEvent, deleteEvent, updateEvent};
+async function checkIfTitleExists(title: string) {
+    let eventExists = await db.event.findUnique ({
+        where: {
+            event_title: title,
+        },
+    });
+
+    if (eventExists) {
+        return true
+    }
+
+    return false;
+}
+
+module.exports = {getAllEvents, getEventById, createNewEvent, deleteEvent, updateEvent, checkIfTitleExists};
