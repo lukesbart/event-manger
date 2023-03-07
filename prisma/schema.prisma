@@ -12,7 +12,7 @@ model Event {
   event_title String   @unique
   date        DateTime
   description String
-  audio_url   String
-  video_url   String
-  handout_url String
+  audio_url   String?
+  video_url   String?
+  handout_url String?
 }
