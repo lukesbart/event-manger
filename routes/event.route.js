@@ -13,17 +13,26 @@ const express = require("express");
 const router = express.Router();
 const eventController = require("../controllers/event.controller");
 const fileUpload = require("../middlewares/fileupload.middleware");
-router.use((req, res, next) => {
-    console.log(`Request for: ${req.url}`);
-    next();
-});
+const eventService = require("../services/event.service");
 // General endpoints
+function authenticate(req, res, next) {
+    if (req.headers.auth === "trustmebro") {
+        next();
+    }
+    else {
+        res.status(403);
+        res.send("Unauthorized");
+    }
+}
 router.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     res.send(yield eventController.getAll());
 }));
 function newPostFilter(req, file, cb) {
     if (!("title" in req.body && "description" in req.body && "date" in req.body)) {
         return cb(new Error("Required fields not filled (title, body, date)"));
+    }
+    else if (eventService.checkIfTitleExists(req.body.title)) {
+        return cb(new Error(`Title: ${req.body.title} already exists`));
     }
     else {
         // Figure out how to automatically include else branch
@@ -38,16 +47,16 @@ function newPostFilter(req, file, cb) {
 }
 const newPostUpload = fileUpload.createUpload(newPostFilter);
 const assetsUpload = newPostUpload.fields([{ name: 'mp4', maxCount: 1 }, { name: 'mp3', maxCount: 1 }, { name: 'pdf', maxCount: 1 }]);
-router.post('/', assetsUpload, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+router.post('/', authenticate, assetsUpload, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     if (!req.files) {
         res.status(400);
         res.send("No files uploaded");
     }
     let filesJSON = JSON.stringify(req.files);
     let filesOBJ = JSON.parse(filesJSON);
-    let mp3Route = filesOBJ["mp3"][0]["filename"];
-    let mp4Route = filesOBJ["mp4"][0]["filename"];
-    let pdfRoute = filesOBJ["pdf"][0]["filename"];
+    let mp3Route = filesOBJ["mp3"] ? filesOBJ["mp3"][0]["filename"] : null;
+    let mp4Route = filesOBJ["mp4"] ? filesOBJ["mp4"][0]["filename"] : null;
+    let pdfRoute = filesOBJ["pdf"] ? filesOBJ["pdf"][0]["filename"] : null;
     let uploadOBJ = {
         title: req.body.title,
         description: req.body.description,
@@ -63,7 +72,7 @@ router.get('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     res.json(yield eventController.getById(req.params.id));
 }));
 const updateUpload = fileUpload.upload.fields([{ name: 'mp4', maxCount: 1 }, { name: 'mp3', maxCount: 1 }, { name: 'pdf', maxCount: 1 }]);
-router.put('/:id', updateUpload, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.put('/:id', authenticate, updateUpload, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let mp3Route, mp4Route, pdfRoute;
     if (req.files) {
         let filesJSON = JSON.stringify(req.files);
