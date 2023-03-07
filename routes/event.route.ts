@@ -100,7 +100,7 @@ router.put('/:id', authenticate, updateUpload, async (req: Request, res: Respons
     res.json(await eventController.updateById(updateOBJ));
 })
 
-router.delete('/:id', async (req: Request, res: Response) => {
+router.delete('/:id', authenticate, async (req: Request, res: Response) => {
     res.json(await eventController.deleteById(req.params.id));
 })
 

@@ -92,7 +92,7 @@ router.put('/:id', authenticate, updateUpload, (req, res) => __awaiter(void 0, v
     };
     res.json(yield eventController.updateById(updateOBJ));
 }));
-router.delete('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.delete('/:id', authenticate, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     res.json(yield eventController.deleteById(req.params.id));
 }));
 module.exports = router;
