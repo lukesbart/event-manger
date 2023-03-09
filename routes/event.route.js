@@ -48,15 +48,14 @@ function newPostFilter(req, file, cb) {
 const newPostUpload = fileUpload.createUpload(newPostFilter);
 const assetsUpload = newPostUpload.fields([{ name: 'mp4', maxCount: 1 }, { name: 'mp3', maxCount: 1 }, { name: 'pdf', maxCount: 1 }]);
 router.post('/', authenticate, assetsUpload, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    if (!req.files) {
-        res.status(400);
-        res.send("No files uploaded");
+    let mp3Route, mp4Route, pdfRoute;
+    if (req.files) {
+        let filesJSON = JSON.stringify(req.files);
+        let filesOBJ = JSON.parse(filesJSON);
+        mp3Route = filesOBJ["mp3"] ? filesOBJ["mp3"][0]["filename"] : null;
+        mp4Route = filesOBJ["mp4"] ? filesOBJ["mp4"][0]["filename"] : null;
+        pdfRoute = filesOBJ["pdf"] ? filesOBJ["pdf"][0]["filename"] : null;
     }
-    let filesJSON = JSON.stringify(req.files);
-    let filesOBJ = JSON.parse(filesJSON);
-    let mp3Route = filesOBJ["mp3"] ? filesOBJ["mp3"][0]["filename"] : null;
-    let mp4Route = filesOBJ["mp4"] ? filesOBJ["mp4"][0]["filename"] : null;
-    let pdfRoute = filesOBJ["pdf"] ? filesOBJ["pdf"][0]["filename"] : null;
     let uploadOBJ = {
         title: req.body.title,
         description: req.body.description,
