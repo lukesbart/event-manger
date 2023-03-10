@@ -16,6 +16,7 @@ app.use(express.urlencoded({ extended: true }))
 app.use(cors())
 app.use("/assets", express.static('assets'));
 app.use("/public", express.static('public'));
+app.use("/docs", express.static('docs/docs.json'))
 
 const event = require("./routes/event.route");
 app.use("/event", event);
@@ -24,7 +25,7 @@ const uploadtest = require("./routes/uploadtest.route")
 app.use("/upload", uploadtest);
 
 app.get('/', (req: Request, res: Response) => {
-  res.send('Express + TypeScript Server');
+  res.send('Welcome to Event Manager. To see events GET /event. To see docs GET /docs');
 });
 
 app.listen(port, () => {

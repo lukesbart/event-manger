@@ -1,0 +1,8 @@
+{
+    "Event Routes": {
+        "/event": {
+            "GET": "Get all events",
+            "POST": "Create a new event"
+        }
+    }
+}
