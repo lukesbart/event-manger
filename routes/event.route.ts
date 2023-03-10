@@ -7,6 +7,7 @@ const fileUpload = require("../middlewares/fileupload.middleware");
 import { UploadDTO } from "../interfaces/uploadDTO"
 import { UpdateDTO } from "../interfaces/updateDTO"
 const eventService = require("../services/event.service");
+const userService = require("../services/user.service");
 
 // General endpoints
 
@@ -19,15 +20,27 @@ function authenticate(req: Request, res: Response, next: any) {
     }
 }
 
+async function usrPwdAuth(req: Request, res: Response, next: any) {
+    if (!req.headers.user) {
+        res.status(403);
+        res.send("Not signed in");
+    } else if (await userService.validateUser(req.headers.user, req.headers.password)) {
+        next();
+    } else {
+        res.status(403);
+        res.send("Invalid username or password")
+    }
+}
+
 
 router.get('/', async (req: Request, res: Response) => {
     res.send(await eventController.getAll());
 });
 
-function newPostFilter(req: Request, file: any, cb: any) {
+async function newPostFilter(req: Request, file: any, cb: any) {
     if (!("title" in req.body && "description" in req.body && "date" in req.body)) {
         return cb(new Error("Required fields not filled (title, body, date)"));
-    } else if (eventService.checkIfTitleExists(req.body.title)) {
+    } else if (await eventService.checkIfTitleExists(req.body.title)) {
         return cb(new Error(`Title: ${req.body.title} already exists`));
     } else {
         // Figure out how to automatically include else branch
@@ -73,7 +86,7 @@ router.get('/:id', async (req: Request, res: Response) => {
 });
 
 const updateUpload = fileUpload.upload.fields([{name: 'mp4', maxCount:1}, {name: 'mp3', maxCount: 1}, {name: 'pdf', maxCount: 1}]);
-router.put('/:id', authenticate, updateUpload, async (req: Request, res: Response) => {
+router.patch('/:id', authenticate, updateUpload, async (req: Request, res: Response) => {
     
     let mp3Route, mp4Route, pdfRoute;
     if (req.files) {
@@ -97,6 +110,31 @@ router.put('/:id', authenticate, updateUpload, async (req: Request, res: Respons
 
     res.json(await eventController.updateById(updateOBJ));
 })
+
+const replaceUpload = newPostUpload.fields([{name: 'mp4', maxCount: 1}, {name: 'mp3', maxCount: 1}, {name: 'pdf', maxCount: 1}]);
+router.put('/:id', authenticate, replaceUpload, async (req: Request, res: Response) => {
+    let mp3Route, mp4Route, pdfRoute;
+    if (req.files) {
+        let filesJSON = JSON.stringify(req.files);
+        let filesOBJ = JSON.parse(filesJSON);
+
+        mp3Route = filesOBJ["mp3"] ? filesOBJ["mp3"][0]["filename"] : undefined;
+        mp4Route = filesOBJ["mp4"] ? filesOBJ["mp4"][0]["filename"] : undefined;
+        pdfRoute = filesOBJ["pdf"] ? filesOBJ["pdf"][0]["filename"] : undefined;
+    }
+
+    let replaceOBJ : UpdateDTO = {
+        id: parseInt(req.params.id),
+        title: req.body.title ? req.body.title : undefined,
+        description: req.body.description ? req.body.description : undefined,
+        date: req.body.date ? req.body.date : undefined,
+        audio_url: req.files ? mp3Route : undefined,
+        video_url: req.files ? mp4Route : undefined,
+        handout_url: req.files ? pdfRoute : undefined,
+    }
+
+    res.json(await eventController.replaceByID(replaceOBJ));
+});
 
 router.delete('/:id', authenticate, async (req: Request, res: Response) => {
     res.json(await eventController.deleteById(req.params.id));

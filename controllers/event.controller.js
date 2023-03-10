@@ -27,22 +27,26 @@ function getById(id) {
 }
 function createNewPost(createObj) {
     return __awaiter(this, void 0, void 0, function* () {
-        yield eventService.createNewEvent(createObj);
-        return "Event created";
+        let newEvent = yield eventService.createNewEvent(createObj);
+        return newEvent;
     });
 }
 function updateById(updateOBJ) {
     return __awaiter(this, void 0, void 0, function* () {
-        eventService.updateEvent(updateOBJ);
-        return "Success";
+        let updatedEvent = eventService.updateEvent(updateOBJ);
+        return updatedEvent;
+    });
+}
+function replaceByID(replaceOBJ) {
+    return __awaiter(this, void 0, void 0, function* () {
+        let replaceEvent = eventService.replaceEvent(replaceOBJ);
+        return replaceEvent;
     });
 }
 function deleteById(id) {
     return __awaiter(this, void 0, void 0, function* () {
         let deleteEvent = yield eventService.deleteEvent(id);
-        console.log(`Delete: ${id}`);
-        console.log(deleteEvent);
-        return `Delete: ${id}`;
+        return deleteEvent;
     });
 }
-module.exports = { getAll, getById, updateById, createNewPost, deleteById };
+module.exports = { getAll, getById, updateById, createNewPost, replaceByID, deleteById };

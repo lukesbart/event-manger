@@ -71,6 +71,24 @@ async function updateEvent(updateObj: any) {
             handout_url: updateObj.handout_url
         }
     });
+
+    return updateEvent;
+}
+
+async function replaceEvent(replaceOBJ: any) {
+    let replaceEvent = await db.event.update({
+        where: {id: replaceOBJ.id},
+        data: {
+            event_title: replaceOBJ.title,
+            date: replaceOBJ.date ? new Date(replaceOBJ.date).toISOString() : undefined,
+            description: replaceOBJ.description,
+            audio_url: replaceOBJ.audio_url ? replaceOBJ.audio_url : null,
+            video_url: replaceOBJ.video_url ? replaceOBJ.video_url : null,
+            handout_url: replaceOBJ.handout_url ? replaceOBJ.handout_url : null,
+        }
+    });
+
+    return replaceEvent;
 }
 
 async function checkIfTitleExists(title: string) {

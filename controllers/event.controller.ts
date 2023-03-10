@@ -19,22 +19,24 @@ async function getById(id: string) {
 }
 
 async function createNewPost(createObj: CreateDTO) {
-    await eventService.createNewEvent(createObj);
-    return "Event created";
+    let newEvent = await eventService.createNewEvent(createObj);
+    return newEvent;
 }
 
 async function updateById(updateOBJ: UpdateDTO) {
-    eventService.updateEvent(updateOBJ);
-    return "Success";
+    let updatedEvent = eventService.updateEvent(updateOBJ);
+    return updatedEvent;
+}
+
+async function replaceByID(replaceOBJ: UpdateDTO) {
+    let replaceEvent = eventService.replaceEvent(replaceOBJ);
+    return replaceEvent;
 }
 
 async function deleteById(id: string) {
     let deleteEvent = await eventService.deleteEvent(id);
-    console.log(`Delete: ${id}`)
-    console.log(deleteEvent);
-
-    return `Delete: ${id}`;
+    return deleteEvent;
 }
 
 
-module.exports = {getAll, getById, updateById, createNewPost, deleteById};
+module.exports = {getAll, getById, updateById, createNewPost, replaceByID, deleteById};
