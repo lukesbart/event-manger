@@ -62,7 +62,7 @@ function deleteEvent(id) {
                 id: deleteId,
             },
         });
-        console.log(deleteEvent);
+        return deleteEvent;
     });
 }
 function updateEvent(updateObj) {
@@ -111,4 +111,4 @@ function checkIfTitleExists(title) {
         return false;
     });
 }
-module.exports = { getAllEvents, getEventById, createNewEvent, deleteEvent, updateEvent, checkIfTitleExists };
+module.exports = { getAllEvents, getEventById, createNewEvent, deleteEvent, updateEvent, replaceEvent, checkIfTitleExists };

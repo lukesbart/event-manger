@@ -54,7 +54,7 @@ async function deleteEvent(id: string) {
         },
     });
 
-    console.log(deleteEvent);
+    return deleteEvent;
 }
 
 async function updateEvent(updateObj: any) {
@@ -105,4 +105,4 @@ async function checkIfTitleExists(title: string) {
     return false;
 }
 
-module.exports = {getAllEvents, getEventById, createNewEvent, deleteEvent, updateEvent, checkIfTitleExists};
+module.exports = {getAllEvents, getEventById, createNewEvent, deleteEvent, updateEvent, replaceEvent, checkIfTitleExists};
