@@ -1,10 +1,11 @@
 // Abstract database operations to db, only add what's neccessary for events in here
 
 const db = require('./db.service');
-const prisma = require('./db.service');
+const fs = require('fs');
+import {ResponseOBJ} from '../interfaces/responseObj';
 
 async function getAllEvents() {
-    let events = await db.event.findMany({
+    const events = await db.event.findMany({
         orderBy: [{
             date: 'desc',
             },
@@ -13,42 +14,130 @@ async function getAllEvents() {
             id: true,
             event_title: true,
             date: true,
+            description: true,
         }
     });
     return events;
 }
 
 async function getEventById(id: string) {
-    let eventId = parseInt(id);
-    
-    let event = await db.event.findUnique({
-        where: {
-            id: eventId,
-        },
-    });
+    const eventId = parseInt(id);
+    const getResponse: ResponseOBJ = {
+        errorMessage: undefined,
+        errorCode: undefined,
+        data: undefined
+    }
 
-    return event;
+    try {
+        const event = await db.event.findUnique({
+            where: {
+                id: eventId,
+            },
+        });
+
+        if (event === null) {
+            throw new Error("Event Not Found");
+        }
+
+        getResponse.data = event;
+
+     
+        } catch(e: any) {
+            getResponse.errorMessage = "Event Not Found";
+            getResponse.errorCode = 404;
+            console.log("Event Not Found")
+        }
+
+    return getResponse;
 }
 
 // Create DTO for new event
 async function createNewEvent(createObj: any) {
-    let newEvent = await db.event.create({
-        data: {
-            event_title: createObj.title,
-            date: new Date(createObj.date).toISOString(),
-            description: createObj.description,
-            audio_url: createObj.audio_url,
-            video_url: createObj.video_url,
-            handout_url: createObj.handout_url,
+    const createResponse: ResponseOBJ = {
+        errorMessage: undefined,
+        errorCode: undefined,
+        data: undefined
+    }; 
+
+    try {
+        const newEvent = await db.event.create({
+            data: {
+                event_title: createObj.title,
+                date: new Date(createObj.date).toISOString(),
+                description: createObj.description,
+                audio_url: createObj.audio_url,
+                video_url: createObj.video_url,
+                handout_url: createObj.handout_url,
+            }
+        })
+
+        console.log(typeof newEvent)
+
+        createResponse.data = newEvent;
+
+
+        return createResponse; 
+    } catch(e: any) {
+        createResponse.errorCode = 400;
+        if (e.code === 'P2002') {
+            let errorMessage;
+
+            if (e.meta['target'][0] === 'event_title') {
+                errorMessage = "Event Title Must Be Unique"
+            }
+
+            // createResponse.errorCode = e.code;
+            createResponse.errorMessage = errorMessage;
+
+            
+        } else {
+            createResponse.errorMessage = "Invalid Date";
         }
-    })
-    return newEvent;
+        return createResponse;
+    }
 }
 
 async function deleteEvent(id: string) {
-    let deleteId = parseInt(id);
+    const deleteId = parseInt(id);
 
-    let deleteEvent = await db.event.delete({
+    const deleteFiles = await db.event.findUnique({
+        where: {
+            id: deleteId,
+        },
+        select: {
+            audio_url: true,
+            video_url: true,
+            handout_url: true
+        }
+    })
+
+    if (deleteFiles) {
+        if (deleteFiles['audio_url']) {
+            fs.unlink(`./assets/${deleteFiles['audio_url']}`, (err: Error) => {
+                if (err) {
+                    console.log(err);
+                }
+            })
+        }
+        
+        if (deleteFiles['video_url']) {
+            fs.unlink(`./assets/${deleteFiles['video_url']}`, (err: Error) => {
+                if (err) {
+                    console.log(err);
+                }
+            })
+        }
+
+        if (deleteFiles['handout_url']) {
+            fs.unlink(`./assets/${deleteFiles['handout_url']}`, (err: Error) => {
+                if (err) {
+                    console.log(err);
+                }
+            })
+        }
+    }
+
+    const deleteEvent = await db.event.delete({
         where: {
             id: deleteId,
         },
@@ -58,9 +147,7 @@ async function deleteEvent(id: string) {
 }
 
 async function updateEvent(updateObj: any) {
-    console.log(updateObj);
-
-    let updateEvent = await db.event.update({
+    const updateEvent = await db.event.update({
         where: {id: updateObj.id},
         data: {
             event_title: updateObj.title,
@@ -76,7 +163,7 @@ async function updateEvent(updateObj: any) {
 }
 
 async function replaceEvent(replaceOBJ: any) {
-    let replaceEvent = await db.event.update({
+    const replaceEvent = await db.event.update({
         where: {id: replaceOBJ.id},
         data: {
             event_title: replaceOBJ.title,
@@ -92,7 +179,7 @@ async function replaceEvent(replaceOBJ: any) {
 }
 
 async function checkIfTitleExists(title: string) {
-    let eventExists = await db.event.findUnique ({
+    const eventExists = await db.event.findUnique ({
         where: {
             event_title: title,
         },

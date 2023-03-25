@@ -1,0 +1,4 @@
+dist
+routes/uploadTest.route.ts
+controllers/user.controller.ts
+prisma/**

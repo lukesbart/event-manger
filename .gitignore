@@ -7,3 +7,4 @@ node_modules
 assets/coolvideo.mp4
 assets/coolaudio.mp3
 db/dev.db
+routes/uploadtest.route.ts

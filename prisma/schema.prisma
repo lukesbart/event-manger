@@ -16,3 +16,11 @@ model Event {
   video_url   String?
   handout_url String?
 }
+
+model User {
+  id         Int    @id @default(autoincrement())
+  username   String @unique
+  email      String @unique
+  name       String
+  password   String
+}

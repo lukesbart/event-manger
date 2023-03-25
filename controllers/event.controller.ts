@@ -8,10 +8,10 @@ async function getAll() {
 }
 
 async function getById(id: string) {
-    let event = await eventService.getEventById(id);
+    const event = await eventService.getEventById(id);
 
     if (event == null) {
-        let errorObj: error = {code: 404};
+        const errorObj: error = {code: 404};
         return errorObj;
     }
 
@@ -19,22 +19,22 @@ async function getById(id: string) {
 }
 
 async function createNewPost(createObj: CreateDTO) {
-    let newEvent = await eventService.createNewEvent(createObj);
+    const newEvent = await eventService.createNewEvent(createObj);
     return newEvent;
 }
 
 async function updateById(updateOBJ: UpdateDTO) {
-    let updatedEvent = eventService.updateEvent(updateOBJ);
+    const updatedEvent = eventService.updateEvent(updateOBJ);
     return updatedEvent;
 }
 
 async function replaceByID(replaceOBJ: UpdateDTO) {
-    let replaceEvent = eventService.replaceEvent(replaceOBJ);
+    const replaceEvent = eventService.replaceEvent(replaceOBJ);
     return replaceEvent;
 }
 
 async function deleteById(id: string) {
-    let deleteEvent = await eventService.deleteEvent(id);
+    const deleteEvent = await eventService.deleteEvent(id);
     return deleteEvent;
 }
 

@@ -13,7 +13,7 @@ Fields with ? are optional
         * description: string
         * mp3?: audio/mpeg
         * mp4?: video/mp4
-        * handout?: application/pdf
+        * pdf?: application/pdf
 
 /event/:id
 * GET: get post with id
@@ -24,7 +24,7 @@ Fields with ? are optional
         * description?: string
         * mp3?: audio/mpeg
         * mp4?: video/mp4
-        * handout?: application/pdf
+        * pdf?: application/pdf
 
 * DELETE: delete post with id
 
