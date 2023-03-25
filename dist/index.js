@@ -7,6 +7,7 @@ const express_1 = __importDefault(require("express"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const morgan = require('morgan');
 const cors = require('cors');
+const helmet = require('helmet');
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 const port = process.env.PORT;
@@ -14,6 +15,9 @@ const port = process.env.PORT;
 app.use(morgan("tiny"));
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
+app.use(helmet({
+    crossOriginResourcePolicy: { policy: "cross-origin" },
+}));
 app.use(cors());
 // Static Routes
 app.use("/assets", express_1.default.static('assets'));

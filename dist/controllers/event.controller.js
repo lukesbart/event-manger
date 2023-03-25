@@ -17,9 +17,9 @@ function getAll() {
 }
 function getById(id) {
     return __awaiter(this, void 0, void 0, function* () {
-        let event = yield eventService.getEventById(id);
+        const event = yield eventService.getEventById(id);
         if (event == null) {
-            let errorObj = { code: 404 };
+            const errorObj = { code: 404 };
             return errorObj;
         }
         return event;
@@ -27,25 +27,25 @@ function getById(id) {
 }
 function createNewPost(createObj) {
     return __awaiter(this, void 0, void 0, function* () {
-        let newEvent = yield eventService.createNewEvent(createObj);
+        const newEvent = yield eventService.createNewEvent(createObj);
         return newEvent;
     });
 }
 function updateById(updateOBJ) {
     return __awaiter(this, void 0, void 0, function* () {
-        let updatedEvent = eventService.updateEvent(updateOBJ);
+        const updatedEvent = eventService.updateEvent(updateOBJ);
         return updatedEvent;
     });
 }
 function replaceByID(replaceOBJ) {
     return __awaiter(this, void 0, void 0, function* () {
-        let replaceEvent = eventService.replaceEvent(replaceOBJ);
+        const replaceEvent = eventService.replaceEvent(replaceOBJ);
         return replaceEvent;
     });
 }
 function deleteById(id) {
     return __awaiter(this, void 0, void 0, function* () {
-        let deleteEvent = yield eventService.deleteEvent(id);
+        const deleteEvent = yield eventService.deleteEvent(id);
         return deleteEvent;
     });
 }

@@ -2,6 +2,7 @@ import express, { Express, Request, Response } from 'express';
 import dotenv from 'dotenv';
 const morgan = require('morgan');
 const cors = require('cors');
+const helmet = require('helmet');
 
 dotenv.config();
 
@@ -12,7 +13,11 @@ const port = process.env.PORT;
 app.use(morgan("tiny"))
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }))
+app.use(helmet({
+  crossOriginResourcePolicy: {policy: "cross-origin"},
+}))
 app.use(cors())
+
 
 // Static Routes
 app.use("/assets", express.static('assets'));

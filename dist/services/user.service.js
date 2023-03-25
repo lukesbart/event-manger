@@ -13,7 +13,7 @@ exports.validateUser = void 0;
 const db = require('./db.service');
 function validateUser(username, password) {
     return __awaiter(this, void 0, void 0, function* () {
-        let user = yield db.user.findUnique({
+        const user = yield db.user.findUnique({
             where: {
                 username: username
             },

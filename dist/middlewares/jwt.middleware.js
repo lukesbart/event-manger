@@ -3,9 +3,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.verifyToken = exports.jwtAuthenticate = void 0;
 const jwt = require('jsonwebtoken');
 function verifyToken(token) {
-    let decoded;
+    // let decoded; 
     try {
-        decoded = jwt.verify(token, process.env.SECRET_KEY);
+        jwt.verify(token, process.env.SECRET_KEY);
     }
     catch (err) {
         return false;

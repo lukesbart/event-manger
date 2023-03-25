@@ -11,11 +11,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const db = require('./db.service');
-const prisma = require('./db.service');
 const fs = require('fs');
 function getAllEvents() {
     return __awaiter(this, void 0, void 0, function* () {
-        let events = yield db.event.findMany({
+        const events = yield db.event.findMany({
             orderBy: [{
                     date: 'desc',
                 },
@@ -32,14 +31,14 @@ function getAllEvents() {
 }
 function getEventById(id) {
     return __awaiter(this, void 0, void 0, function* () {
-        let eventId = parseInt(id);
-        let getResponse = {
+        const eventId = parseInt(id);
+        const getResponse = {
             errorMessage: undefined,
             errorCode: undefined,
             data: undefined
         };
         try {
-            let event = yield db.event.findUnique({
+            const event = yield db.event.findUnique({
                 where: {
                     id: eventId,
                 },
@@ -60,13 +59,13 @@ function getEventById(id) {
 // Create DTO for new event
 function createNewEvent(createObj) {
     return __awaiter(this, void 0, void 0, function* () {
-        let createResponse = {
+        const createResponse = {
             errorMessage: undefined,
             errorCode: undefined,
             data: undefined
         };
         try {
-            let newEvent = yield db.event.create({
+            const newEvent = yield db.event.create({
                 data: {
                     event_title: createObj.title,
                     date: new Date(createObj.date).toISOString(),
@@ -99,8 +98,8 @@ function createNewEvent(createObj) {
 }
 function deleteEvent(id) {
     return __awaiter(this, void 0, void 0, function* () {
-        let deleteId = parseInt(id);
-        let deleteFiles = yield db.event.findUnique({
+        const deleteId = parseInt(id);
+        const deleteFiles = yield db.event.findUnique({
             where: {
                 id: deleteId,
             },
@@ -133,7 +132,7 @@ function deleteEvent(id) {
                 });
             }
         }
-        let deleteEvent = yield db.event.delete({
+        const deleteEvent = yield db.event.delete({
             where: {
                 id: deleteId,
             },
@@ -143,7 +142,7 @@ function deleteEvent(id) {
 }
 function updateEvent(updateObj) {
     return __awaiter(this, void 0, void 0, function* () {
-        let updateEvent = yield db.event.update({
+        const updateEvent = yield db.event.update({
             where: { id: updateObj.id },
             data: {
                 event_title: updateObj.title,
@@ -159,7 +158,7 @@ function updateEvent(updateObj) {
 }
 function replaceEvent(replaceOBJ) {
     return __awaiter(this, void 0, void 0, function* () {
-        let replaceEvent = yield db.event.update({
+        const replaceEvent = yield db.event.update({
             where: { id: replaceOBJ.id },
             data: {
                 event_title: replaceOBJ.title,
@@ -175,7 +174,7 @@ function replaceEvent(replaceOBJ) {
 }
 function checkIfTitleExists(title) {
     return __awaiter(this, void 0, void 0, function* () {
-        let eventExists = yield db.event.findUnique({
+        const eventExists = yield db.event.findUnique({
             where: {
                 event_title: title,
             },

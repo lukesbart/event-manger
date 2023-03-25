@@ -11,7 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const express = require('express');
 const router = express.Router();
-const userController = require('../controllers/user.controller');
+// const userController = require('../controllers/user.controller')
 const userService = require("../services/user.service");
 const jwt = require('jsonwebtoken');
 const jwtMiddleware = require('../middlewares/jwt.middleware');
@@ -30,7 +30,7 @@ function authenticate(req, res, next) {
         }
     });
 }
-function jwtAuthenticate(req, res, next) {
+function jwtAuthenticate(req, res) {
     console.log(req.headers.auth);
     let decoded;
     try {
@@ -44,15 +44,15 @@ function jwtAuthenticate(req, res, next) {
     res.send(decoded.user);
 }
 router.post('/login', authenticate, (req, res) => {
-    let token = jwt.sign({ user: 'lukesb' }, process.env.SECRET_KEY, { expiresIn: `20m` });
-    let newLogin = {
+    const token = jwt.sign({ user: 'lukesb' }, process.env.SECRET_KEY, { expiresIn: `20m` });
+    const newLogin = {
         token: token,
         ttl: String(Date.now() + 1000 * 60 * 20),
     };
     res.json(newLogin);
 });
 router.post('/verify', (req, res) => {
-    let token = req.headers.token;
+    const token = req.headers.token;
     if (jwtMiddleware.verifyToken(token)) {
         res.status(200);
         res.send("Verified");
