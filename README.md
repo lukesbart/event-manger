@@ -33,4 +33,5 @@ Fields with ? are optional
 **Express.js** for the server\
 **Prisma** for the ORM based off of **SQLite** Database\
 **Multer** for multipart/form-data (file upload) submissions\
-**Morgan** for server logging
+**Morgan** for server logging\
+**Helmet** for server security

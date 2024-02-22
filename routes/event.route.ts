@@ -16,7 +16,7 @@ router.get('/', async (req: Request, res: Response) => {
 });
 
 
-const assetsUpload = fileUpload.newPostUpload.fields([{name: 'mp4', maxCount: 1}, {name: 'mp3', maxCount: 1}, {name: 'pdf', maxCount: 1}]);
+const assetsUpload = fileUpload.newPostUpload.fields([{name: 'mp4', maxCount: 1}, {name: 'mp3', maxCount: 1}, {name: 'handout', maxCount: 1}]);
 router.post('/', jwtMiddleware.jwtAuthenticate, assetsUpload, async (req: Request, res: Response) => {
     let mp3Route, mp4Route, pdfRoute;
 
@@ -26,7 +26,7 @@ router.post('/', jwtMiddleware.jwtAuthenticate, assetsUpload, async (req: Reques
 
         mp3Route = filesOBJ["mp3"] ? filesOBJ["mp3"][0]["filename"] : null;
         mp4Route = filesOBJ["mp4"] ? filesOBJ["mp4"][0]["filename"] : null;
-        pdfRoute = filesOBJ["pdf"] ? filesOBJ["pdf"][0]["filename"] : null;
+        pdfRoute = filesOBJ["handout"] ? filesOBJ["handout"][0]["filename"] : null;
     }
 
     const uploadOBJ: UploadDTO = {

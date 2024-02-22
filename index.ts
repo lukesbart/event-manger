@@ -3,14 +3,25 @@ import dotenv from 'dotenv';
 const morgan = require('morgan');
 const cors = require('cors');
 const helmet = require('helmet');
+const rateLimit = require('express-rate-limit')
 
 dotenv.config();
 
 const app: Express = express();
 const port = process.env.PORT;
 
+// Middleware Config
+const limiter = rateLimit({
+	windowMs: 15 * 60 * 1000, // 15 minutes
+	max: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
+	standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+	legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+})
+
+
 // Middleware
 app.use(morgan("tiny"))
+app.use(limiter);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }))
 app.use(helmet({

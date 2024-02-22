@@ -8,11 +8,20 @@ const dotenv_1 = __importDefault(require("dotenv"));
 const morgan = require('morgan');
 const cors = require('cors');
 const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 const port = process.env.PORT;
+// Middleware Config
+const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 100,
+    standardHeaders: true,
+    legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+});
 // Middleware
 app.use(morgan("tiny"));
+app.use(limiter);
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
 app.use(helmet({

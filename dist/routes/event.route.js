@@ -18,7 +18,7 @@ const jwtMiddleware = require('../middlewares/jwt.middleware');
 router.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     res.send(yield eventController.getAll());
 }));
-const assetsUpload = fileUpload.newPostUpload.fields([{ name: 'mp4', maxCount: 1 }, { name: 'mp3', maxCount: 1 }, { name: 'pdf', maxCount: 1 }]);
+const assetsUpload = fileUpload.newPostUpload.fields([{ name: 'mp4', maxCount: 1 }, { name: 'mp3', maxCount: 1 }, { name: 'handout', maxCount: 1 }]);
 router.post('/', jwtMiddleware.jwtAuthenticate, assetsUpload, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let mp3Route, mp4Route, pdfRoute;
     if (req.files) {
@@ -26,7 +26,7 @@ router.post('/', jwtMiddleware.jwtAuthenticate, assetsUpload, (req, res) => __aw
         const filesOBJ = JSON.parse(filesJSON);
         mp3Route = filesOBJ["mp3"] ? filesOBJ["mp3"][0]["filename"] : null;
         mp4Route = filesOBJ["mp4"] ? filesOBJ["mp4"][0]["filename"] : null;
-        pdfRoute = filesOBJ["pdf"] ? filesOBJ["pdf"][0]["filename"] : null;
+        pdfRoute = filesOBJ["handout"] ? filesOBJ["handout"][0]["filename"] : null;
     }
     const uploadOBJ = {
         title: req.body.title,
